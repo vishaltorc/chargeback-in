@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ---------------------------------------------------------------------------
+   Base typography
+   --------------------------------------------------------------------------- */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "ss01", "ss02", "cv11";
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  color-scheme: light;
+}
+
+/* Tabular numerals everywhere money, dates, and case refs appear.
+   The dispute story is told in numbers — they need to line up. */
+.tabular-nums,
+table,
+input[type="date"],
+input[type="number"],
+input[inputmode="numeric"],
+input[inputmode="decimal"],
+code,
+kbd,
+pre {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Display headings stay legible without shouting */
+h1, h2, h3, h4 {
+  letter-spacing: -0.015em;
+}
+
+/* ---------------------------------------------------------------------------
+   Interaction details
+   --------------------------------------------------------------------------- */
+
+/* Visible, themed focus ring — keyboard users matter (legal-process tool) */
+:focus-visible {
+  outline: 2px solid #18181b; /* zinc-900 */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Subtle selection tint that reads as "official" rather than "neon" */
+::selection {
+  background-color: #18181b;
+  color: #fafafa;
+}
+
+/* Smooth scrolling for anchor navigation within long pages (filing sheet) */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---------------------------------------------------------------------------
+   Print rules — the dossier prints to PDF as an evidence attachment
+   --------------------------------------------------------------------------- */
+
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt;
+  }
+  /* Hide chrome that doesn't belong in a filed document */
+  nav,
+  .print\\:hidden {
+    display: none !important;
+  }
+  /* Keep tables together — split rows are a giveaway it was screen-printed */
+  table {
+    page-break-inside: avoid;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* Show the URL after links so reviewers can verify citations */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #525252;
+  }
 }
